@@ -20,7 +20,7 @@ navegador, también sin internet.
 
 ## Cómo usarla
 
-Abrí `index.html` con doble clic, o publicala con GitHub Pages (ver abajo) para tener un enlace.
+Abrí https://guigiovine.github.io/simulador-trabajo-domestico/
 
 ## Aviso
 
