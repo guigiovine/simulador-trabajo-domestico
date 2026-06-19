@@ -3,6 +3,12 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/).
 Versionado siguiendo [SemVer](https://semver.org/lang/es/).
 
+## [1.1.0] — 2026-06-19
+### Cambiado
+- Rediseño visual completo: estética **minimalista monocromática** con paleta basada en el azul institucional de BPS.
+- Nueva tipografía editorial: serif para títulos y cifras, monoespaciada para etiquetas y datos (sin fuentes genéricas y sin dependencias externas).
+- Superficies planas, líneas finas y sin sombras; gráfico y componentes recoloreados a la paleta azul.
+
 ## [1.0.0] — 2026-06-19
 ### Agregado
 - Modo intermedio **"Equilibrar"** con deslizador ajustable (0–100%) para repartir el peso de los aportes entre empleador y trabajador/a.
