@@ -4,9 +4,8 @@ Herramienta web de un solo archivo para comparar lo que cuesta pagar a una perso
 de trabajo doméstico **en la mano** (informal) frente al costo real de **formalizarla**
 con todos los aportes ante BPS (Grupo 21).
 
-Sirve igual sea él o ella. Es completamente **autocontenida**: un único `index.html`
-sin dependencias externas (ni librerías, ni fuentes remotas). Se abre en cualquier
-navegador, también sin internet.
+Es completamente **autocontenida**: un único `index.html`
+sin dependencias externas (ni librerías, ni fuentes remotas).
 
 ## Qué calcula
 
