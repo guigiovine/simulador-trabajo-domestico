@@ -28,13 +28,6 @@ Estimación orientativa con valores del laudo del Grupo 21 vigentes desde enero 
 No reemplaza el cálculo oficial ni asesoramiento profesional. Para montos exactos,
 usá el Simulador de aportes de BPS o llamá al 0800 2001 (opción 2).
 
-## Publicar como sitio (GitHub Pages)
-
-1. En el repo: **Settings → Pages**.
-2. En "Build and deployment", Source: **Deploy from a branch**.
-3. Branch: `main` y carpeta `/ (root)`. Guardar.
-4. En un minuto queda en `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`.
-
 ## Licencia
 
 MIT — ver [LICENSE](LICENSE).
