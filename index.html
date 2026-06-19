@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador trabajo doméstico · Informal vs. Formal (Uruguay)</title>
+<style>
+  :root{
+    --paper:#f6f7f4; --card:#ffffff; --ink:#16282d; --ink-soft:#4a5b5f;
+    --line:#dde2db; --line-strong:#c4ccc2;
+    --formal:#2f6f5e; --formal-soft:#dff0e9; --formal-deep:#1f4d41;
+    --informal:#c26a31; --informal-soft:#f7e7d8;
+    --descuento:#8aa39b; --cargas:#9fc7b8; --warn:#b23b3b; --warn-soft:#fbe9e9;
+    --shadow:0 1px 2px rgba(22,40,45,.06), 0 8px 24px rgba(22,40,45,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;padding:clamp(16px,4vw,48px) clamp(14px,4vw,24px)}
+  .wrap{max-width:1100px;margin:0 auto}
+
+  header{margin-bottom:24px;max-width:760px}
+  .eyebrow{font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--formal);font-weight:700;margin-bottom:10px}
+  h1{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:clamp(28px,5vw,44px);line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
+  h1 em{font-style:normal;color:var(--formal)}
+  .lede{color:var(--ink-soft);font-size:clamp(15px,2vw,17px);max-width:62ch}
+
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+  .btn{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;border:1px solid var(--line-strong);background:#fff;color:var(--ink);padding:9px 14px;border-radius:10px;cursor:pointer;transition:all .15s}
+  .btn:hover{border-color:var(--formal);color:var(--formal-deep)}
+  .btn.primary{background:var(--formal);color:#fff;border-color:var(--formal)}
+  .btn.primary:hover{background:var(--formal-deep);color:#fff}
+
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px;margin-bottom:20px}
+  .panel:last-child{margin-bottom:0}
+  .panel h2{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .panel h2 .dot{width:7px;height:7px;border-radius:50%;background:var(--formal)}
+  .form-panel{position:sticky;top:16px}
+  @media(max-width:860px){.form-panel{position:static}}
+
+  .section-h{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--formal);margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+  .section-h:first-of-type{margin-top:0;padding-top:0;border-top:none}
+
+  .field{margin-bottom:16px}
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+  .hint{font-size:12px;color:var(--ink-soft);font-weight:400;margin-top:5px;line-height:1.35}
+  .input-money{position:relative}
+  .input-money::before{content:"$";position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink-soft);font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-size:15px}
+  input[type=number]{width:100%;padding:11px 13px 11px 26px;border:1px solid var(--line-strong);border-radius:10px;font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-size:16px;color:var(--ink);background:#fcfdfc;transition:border-color .15s, box-shadow .15s}
+  input.plain{padding-left:13px}
+  input[type=number]:focus,select:focus{outline:none;border-color:var(--formal);box-shadow:0 0 0 3px var(--formal-soft)}
+  select{width:100%;padding:11px 13px;border:1px solid var(--line-strong);border-radius:10px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;background:#fcfdfc;color:var(--ink);cursor:pointer}
+
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#eef1ed;padding:4px;border-radius:11px}
+  .seg.seg3{grid-template-columns:1fr 1fr 1fr}
+  .range{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--informal),var(--formal));outline:none;margin:2px 0 6px}
+  .range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--formal-deep);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--formal-deep);cursor:pointer}
+  .range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft)}
+  .seg button{border:none;background:transparent;padding:9px 6px;border-radius:8px;cursor:pointer;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:600;color:var(--ink-soft);line-height:1.25;transition:all .15s}
+  .seg button.active{background:#fff;color:var(--formal-deep);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .switch{position:relative;display:inline-block;width:42px;height:24px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:var(--line-strong);border-radius:99px;transition:.2s;cursor:pointer}
+  .slider::before{content:"";position:absolute;height:18px;width:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked + .slider{background:var(--formal)}
+  .switch input:checked + .slider::before{transform:translateX(18px)}
+
+  details.adv{margin-top:8px;border-top:1px dashed var(--line);padding-top:14px}
+  details.adv summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-soft);list-style:none;display:flex;align-items:center;gap:6px}
+  details.adv summary::-webkit-details-marker{display:none}
+  details.adv summary::before{content:"▸";transition:transform .15s;display:inline-block}
+  details.adv[open] summary::before{transform:rotate(90deg)}
+  .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .adv-grid .field{margin-bottom:0}
+  .adv-grid label{font-size:12px}
+  .adv-grid input,.adv-grid select{font-size:14px;padding:8px 10px}
+  .adv-grid input.plain{padding:8px 10px}
+  .adv-note{font-size:11.5px;color:var(--ink-soft);margin-top:12px;line-height:1.4}
+
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+  @media(max-width:480px){.cards{grid-template-columns:1fr}}
+  .rcard{border-radius:14px;padding:18px;border:1px solid var(--line)}
+  .rcard.inf{background:var(--informal-soft);border-color:#eccfb0}
+  .rcard.for{background:var(--formal-soft);border-color:#bfe0d3}
+  .rcard .tag{font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .rcard.inf .tag{color:var(--informal)} .rcard.for .tag{color:var(--formal)}
+  .rcard .sub{font-size:12px;color:var(--ink-soft);margin-bottom:14px}
+  .big{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:clamp(24px,4.2vw,32px);letter-spacing:-.02em;line-height:1}
+  .big small{font-size:14px;font-weight:500;color:var(--ink-soft);letter-spacing:0}
+  .rcard .row{display:flex;justify-content:space-between;font-size:13px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(22,40,45,.08)}
+  .rcard .row span:last-child{font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-weight:700}
+
+  .compare h3{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;margin-bottom:4px}
+  .compare .clab{font-size:12px;color:var(--ink-soft);margin-bottom:16px}
+  .barrow{margin-bottom:16px}
+  .barrow .bl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .barrow .bl b{font-size:13px;font-weight:600}
+  .barrow .bl .v{font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-weight:700;font-size:14px}
+  .track{height:34px;border-radius:9px;background:#eef1ed;overflow:hidden;display:flex}
+  .seg-bar{height:100%;transition:width .6s cubic-bezier(.4,0,.2,1);min-width:0}
+  .s-liq{background:var(--formal)} .s-desc{background:var(--descuento)} .s-pat{background:var(--formal-deep)} .s-car{background:var(--cargas)} .s-inf{background:var(--informal)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--ink-soft)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .delta{margin-top:18px;padding:14px 16px;border-radius:12px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .delta .dl{font-size:13px;color:var(--ink-soft)}
+  .delta .dv{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:22px;color:var(--informal)}
+  .delta .dv small{font-size:13px;font-weight:500}
+
+  .chart-wrap{margin:2px -4px 0}
+  .chart-wrap svg{width:100%;height:auto;display:block;overflow:visible}
+  .chart-foot{font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.5}
+  .chart-foot b{font-weight:700}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  table th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  table td{padding:8px 0;border-bottom:1px solid var(--line)}
+  table td:last-child,table th:last-child{text-align:right;font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-weight:700}
+  table tr.total td{border-bottom:none;border-top:2px solid var(--ink);font-weight:700;padding-top:11px}
+  table tr.total td:first-child{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  table tr.sub td:first-child{padding-left:14px;color:var(--ink-soft);font-weight:400}
+  .tline{font-size:12px;color:var(--ink-soft);font-weight:400}
+
+  .flag{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.45;display:flex;gap:9px;align-items:flex-start}
+  .flag.ok{background:var(--formal-soft);color:var(--formal-deep)}
+  .flag.bad{background:var(--warn-soft);color:var(--warn)}
+  .flag.info{background:#eef3f6;color:var(--ink)}
+  .flag b{font-weight:700}
+
+  .risks ul{list-style:none;display:grid;gap:10px}
+  .risks li{display:flex;gap:10px;font-size:13.5px;align-items:flex-start;color:var(--ink-soft)}
+  .risks li b{color:var(--ink);font-weight:600}
+  .risks li .mk{color:var(--informal);font-weight:700;flex:none}
+
+  .kpi{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:480px){.kpi{grid-template-columns:1fr}}
+  .kbox{border:1px solid var(--line);border-radius:12px;padding:14px}
+  .kbox .kl{font-size:12px;color:var(--ink-soft);margin-bottom:6px}
+  .kbox .kv{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:20px;color:var(--formal-deep)}
+  .kbox .kv.amber{color:var(--informal)}
+  .kbox .ks{font-size:11.5px;color:var(--ink-soft);margin-top:4px}
+
+  .cmp-empty{font-size:13px;color:var(--ink-soft)}
+  .cmp-table td:first-child,.cmp-table th:first-child{text-align:left;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  .links{display:grid;gap:10px}
+  .links a{font-size:13.5px;color:var(--formal-deep);text-decoration:none;display:flex;gap:8px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line)}
+  .links a:hover{text-decoration:underline}
+  .links a .src-n{font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-size:11px;color:var(--ink-soft);flex:none;width:26px}
+  .gloss dt{font-weight:700;font-size:13.5px;margin-top:10px}
+  .gloss dd{font-size:13px;color:var(--ink-soft);margin-left:0}
+  .check{list-style:none;counter-reset:step;display:grid;gap:12px}
+  .check li{counter-increment:step;display:flex;gap:12px;font-size:13.5px}
+  .check li::before{content:counter(step);flex:none;width:26px;height:26px;border-radius:50%;background:var(--formal);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .check li b{font-weight:600}
+  .check li a{color:var(--formal-deep)}
+
+  .share-row{display:flex;gap:8px;margin-top:8px}
+  .share-row input{flex:1;font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;font-size:12px;padding:9px 11px}
+
+  footer{margin-top:24px;font-size:12px;color:var(--ink-soft);line-height:1.5;max-width:820px}
+  footer b{color:var(--ink)}
+
+  @media print{
+    body{padding:0;background:#fff}
+    .form-panel,.toolbar,.no-print{display:none!important}
+    .grid{grid-template-columns:1fr;gap:0}
+    .panel{box-shadow:none;break-inside:avoid;border-color:#ccc}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Uruguay · Grupo 21 · BPS · valores ene-2026</div>
+    <h1>¿Cuánto cambia ponerlo <em>en regla</em>?</h1>
+    <p class="lede">Compará lo que pagás hoy "en la mano" con el costo real de formalizar a la persona que trabaja en tu casa, con aportes, aguinaldo, presentismo, antigüedad y todo lo demás. Sirve igual sea él o ella.</p>
+  </header>
+
+  <div class="toolbar no-print">
+    <button class="btn" id="btnPrint">Imprimir / PDF</button>
+    <button class="btn primary" id="btnShare">Copiar enlace del escenario</button>
+  </div>
+
+  <div class="grid">
+
+    <!-- ===================== CONTROLS ===================== -->
+    <form class="panel form-panel" id="form" autocomplete="off">
+
+      <div class="section-h">Datos de la relación</div>
+      <div class="field">
+        <label for="horas">Horas por semana</label>
+        <input class="plain" type="number" id="horas" value="6" min="0" step="0.5">
+        <div class="hint">Tu caso: 6 h una vez por semana.</div>
+      </div>
+      <div class="field">
+        <label for="valor">Valor hora "en la mano" (líquido actual)</label>
+        <div class="input-money"><input type="number" id="valor" value="294" min="0" step="1"></div>
+        <div class="hint">El cálculo es el mismo para cualquier trabajador/a.</div>
+      </div>
+      <div class="field">
+        <label>Al formalizar, ¿qué priorizás?</label>
+        <div class="seg seg3" id="modo">
+          <button type="button" data-modo="mantener" class="active">Que siga<br>cobrando igual</button>
+          <button type="button" data-modo="equilibrar">Equilibrar<br>(ajustable)</button>
+          <button type="button" data-modo="nominal">Tomar el valor<br>como nominal</button>
+        </div>
+        <div id="repartoWrap" style="display:none;margin-top:12px">
+          <input type="range" id="reparto" min="0" max="100" value="50" step="5" class="range">
+          <div class="range-labels"><span>Ella absorbe los aportes</span><span>Vos los absorbés</span></div>
+          <div class="hint" id="repartoReadout"></div>
+        </div>
+        <div class="hint" id="modoHint">El nominal sube para que, tras los descuentos, le quede el mismo líquido. Vos absorbés los aportes.</div>
+      </div>
+      <div class="field">
+        <label for="fonasa">Situación FONASA</label>
+        <select id="fonasa">
+          <option value="3">Sin hijos ni cónyuge (3%)</option>
+          <option value="4.5">Sin cargas, banda alta (4,5%)</option>
+          <option value="6">Con hijos a cargo (6%)</option>
+          <option value="6.5">Con cónyuge a cargo (6,5%)</option>
+          <option value="8">Con cónyuge e hijos (8%)</option>
+        </select>
+      </div>
+
+      <div class="section-h">Antigüedad y beneficios</div>
+      <div class="field">
+        <label for="antiguedad">Años de antigüedad</label>
+        <input class="plain" type="number" id="antiguedad" value="0" min="0" max="40" step="1">
+        <div class="hint">Prima de 0,5% por año, tope 5% a los 10 años (se aplica desde el primer enero con un año cumplido).</div>
+      </div>
+      <div class="field toggle">
+        <div><label style="margin-bottom:2px">Asistencia perfecta (prima por presentismo)</label>
+          <div class="hint" style="margin-top:0">Si no falta, cobra ¼ del medio aguinaldo en junio y diciembre.</div></div>
+        <label class="switch"><input type="checkbox" id="presentismo" checked><span class="slider"></span></label>
+      </div>
+      <div class="field toggle">
+        <div><label style="margin-bottom:2px">Día del trabajador doméstico (19/8)</label>
+          <div class="hint" style="margin-top:0">Feriado pago: suma un jornal en agosto.</div></div>
+        <label class="switch"><input type="checkbox" id="diaTrab"><span class="slider"></span></label>
+      </div>
+
+      <div class="section-h">Cargas anuales</div>
+      <div class="field toggle">
+        <div><label style="margin-bottom:2px">Incluir cargas en formal</label>
+          <div class="hint" style="margin-top:0">Aguinaldo, licencia, salario vacacional, presentismo (obligatorios).</div></div>
+        <label class="switch"><input type="checkbox" id="cargas" checked><span class="slider"></span></label>
+      </div>
+      <div class="field toggle">
+        <div><label style="margin-bottom:2px">En informal, ¿también las pagás?</label>
+          <div class="hint" style="margin-top:0">Hay quien paga aguinaldo y licencia aun sin registrar.</div></div>
+        <label class="switch"><input type="checkbox" id="cargasInf"><span class="slider"></span></label>
+      </div>
+
+      <div class="section-h">Proyección en el tiempo</div>
+      <div class="field">
+        <label for="meses">Período a proyectar (meses)</label>
+        <input class="plain" type="number" id="meses" value="12" min="1" max="120" step="1">
+      </div>
+      <div class="adv-grid" style="margin-bottom:14px">
+        <div class="field" style="margin-bottom:0">
+          <label for="inicio">Mes de inicio</label>
+          <select id="inicio">
+            <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+            <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+            <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Setiembre</option>
+            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="vacmes">Mes de vacaciones</label>
+          <select id="vacmes">
+            <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+            <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+            <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Setiembre</option>
+            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="ajuste">Ajuste salarial semestral estimado %</label>
+        <input class="plain" type="number" id="ajuste" value="2" min="0" max="20" step="0.1">
+        <div class="hint">Se aplica cada enero y julio en la proyección (el laudo ajusta dos veces al año).</div>
+      </div>
+
+      <details class="adv">
+        <summary>Extras y porcentajes (avanzado)</summary>
+        <div class="adv-grid">
+          <div class="field"><label>Mínimo legal $/h (ref.)</label><input class="plain" type="number" id="minref" value="164" step="1"></div>
+          <div class="field"><label>Nocturnidad % (22–6 h)</label><input class="plain" type="number" id="nocturnidad" value="0" step="1"></div>
+          <div class="field"><label>Horas extra / mes</label><input class="plain" type="number" id="hextra" value="0" step="1"></div>
+          <div class="field"><label>Recargo h. extra %</label><input class="plain" type="number" id="hextraRec" value="100" step="5"></div>
+          <div class="field"><label>Jubilación personal %</label><input class="plain" type="number" id="r_jub" value="15" step="0.1"></div>
+          <div class="field"><label>FRL personal %</label><input class="plain" type="number" id="r_frl" value="0.1" step="0.05"></div>
+          <div class="field"><label>Aportes patronales %</label><input class="plain" type="number" id="r_pat" value="14.5" step="0.1"></div>
+          <div class="field"><label>Aguinaldo %</label><input class="plain" type="number" id="r_agui" value="8.33" step="0.01"></div>
+          <div class="field"><label>Licencia + sal. vac. %</label><input class="plain" type="number" id="r_lic" value="7" step="0.1"></div>
+          <div class="field"><label>Semanas por mes</label><input class="plain" type="number" id="r_sem" value="4.32" step="0.01"></div>
+        </div>
+        <p class="adv-note">Mínimo Cat. I (laudo ene-2026): $164/h. Las nuevas categorías II y III rigen desde julio 2026; sus mínimos los fija el convenio, verificá en BPS. BPC 2026: $6.864.</p>
+      </details>
+    </form>
+
+    <!-- ===================== RESULTS ===================== -->
+    <div>
+
+      <div class="cards">
+        <div class="rcard inf">
+          <div class="tag">Informal · hoy</div>
+          <div class="sub">Promedio mensual y lo que recibe</div>
+          <div class="big">$<span id="inf_total">0</span> <small>/ mes</small></div>
+          <div class="row"><span>Recibe</span><span>$<span id="inf_ella">0</span></span></div>
+          <div class="row"><span>Aportes</span><span>$0</span></div>
+        </div>
+        <div class="rcard for">
+          <div class="tag">Formal · en regla</div>
+          <div class="sub">Costo total promedio para vos</div>
+          <div class="big">$<span id="for_total">0</span> <small>/ mes</small></div>
+          <div class="row"><span>Recibe (líquido)</span><span>$<span id="for_ella">0</span></span></div>
+          <div class="row"><span>Sueldo nominal</span><span>$<span id="for_nom">0</span></span></div>
+        </div>
+      </div>
+
+      <div class="panel compare">
+        <h3>Costo mensual promedio para vos</h3>
+        <div class="clab">A dónde va cada peso en el escenario formal</div>
+        <div class="barrow">
+          <div class="bl"><b>Informal</b><span class="v">$<span id="bar_inf_v">0</span></span></div>
+          <div class="track"><div class="seg-bar s-inf" id="bar_inf" style="width:0%"></div></div>
+        </div>
+        <div class="barrow">
+          <div class="bl"><b>Formal</b><span class="v">$<span id="bar_for_v">0</span></span></div>
+          <div class="track">
+            <div class="seg-bar s-liq" id="bar_liq"></div>
+            <div class="seg-bar s-desc" id="bar_desc"></div>
+            <div class="seg-bar s-pat" id="bar_pat"></div>
+            <div class="seg-bar s-car" id="bar_car"></div>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i class="s-inf"></i>Pago en la mano</span>
+          <span><i class="s-liq"></i>Su líquido</span>
+          <span><i class="s-desc"></i>Sus aportes</span>
+          <span><i class="s-pat"></i>Aportes tuyos</span>
+          <span><i class="s-car"></i>Cargas anuales</span>
+        </div>
+        <div class="delta">
+          <div class="dl">Formalizar te cuesta por mes (promedio)</div>
+          <div class="dv">+$<span id="delta_abs">0</span> <small>(<span id="delta_pct">0</span>% más)</small></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="dot"></span>Evolución del gasto acumulado</h2>
+        <div class="chart-wrap" id="chart"></div>
+        <div class="chart-foot">
+          En <b><span id="ev_meses">12</span> meses</b>: informal <b style="color:var(--informal)">$<span id="ev_inf">0</span></b> · formal <b style="color:var(--formal)">$<span id="ev_for">0</span></b> · diferencia acumulada <b>$<span id="ev_dif">0</span></b>.
+          <div style="margin-top:8px">Los <b>escalones</b> ◆ marcan los meses con extras: aguinaldo + presentismo (junio y diciembre), licencia + salario vacacional (mes de vacaciones) y el día del trabajador (agosto). Pasá el cursor para ver mes a mes.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="dot"></span>Desglose mensual del escenario formal</h2>
+        <table><tbody id="breakdown"></tbody></table>
+        <div class="flag ok" id="flag"><b>✓</b><div id="flag_txt"></div></div>
+        <div class="flag info" id="flagF" style="margin-top:8px"><b>♥</b><div id="flagF_txt"></div></div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="dot"></span>Qué gana la persona al formalizarse</h2>
+        <div class="kpi">
+          <div class="kbox"><div class="kl">Aportes a su jubilación / año</div><div class="kv">$<span id="g_jub">0</span></div><div class="ks">Montepío (15%) + patronal (7,5%). Suma 12 meses de aportes al año.</div></div>
+          <div class="kbox"><div class="kl">Cobertura de salud (FONASA)</div><div class="kv" id="g_fonasa">—</div><div class="ks" id="g_fonasa_s">Según horas y remuneración.</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="dot"></span>Costo de regularizar atrasos (retroactivo)</h2>
+        <div class="adv-grid" style="margin-bottom:14px">
+          <div class="field" style="margin-bottom:0"><label>Meses ya trabajados en informal</label><input class="plain" type="number" id="retroMeses" value="0" min="0" step="1"></div>
+          <div class="field" style="margin-bottom:0"><label>Recargos y mora %</label><input class="plain" type="number" id="retroRecargo" value="40" min="0" step="5"></div>
+        </div>
+        <div class="kpi">
+          <div class="kbox"><div class="kl">Aportes adeudados (estimado)</div><div class="kv amber">$<span id="retro_aportes">0</span></div></div>
+          <div class="kbox"><div class="kl">Total con recargos</div><div class="kv amber">$<span id="retro_total">0</span></div><div class="ks">Estimación gruesa; BPS calcula el monto real.</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="dot"></span>Calculadora inversa</h2>
+        <div class="field" style="margin-bottom:12px">
+          <label for="invBudget">Tengo este presupuesto mensual (costo total)</label>
+          <div class="input-money"><input type="number" id="invBudget" value="12000" min="0" step="500"></div>
+        </div>
+        <div class="flag ok" id="inv_txt"><b>→</b><div></div></div>
+      </div>
+
+      <div class="panel risks no-print">
+        <h2><span class="dot"></span>Lo que dejás de arriesgar</h2>
+        <ul>
+          <li><span class="mk">→</span><div><b>Multas de BPS / MTSS.</b> Tener trabajo doméstico sin registrar es infracción.</div></li>
+          <li><span class="mk">→</span><div><b>Juicio laboral.</b> Sin registro se presumen años de aportes, despido, licencias y horas impagas a tu cargo.</div></li>
+          <li><span class="mk">→</span><div><b>Accidentes.</b> Estando formal, el seguro del BSE cubre un accidente en tu casa.</div></li>
+          <li><span class="mk">→</span><div><b>Sus derechos.</b> Jubilación, salud, licencia y aguinaldo para el/la trabajador/a.</div></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== NORMATIVA / GLOSARIO / CHECKLIST ===================== -->
+  <div style="margin-top:20px" class="grid">
+    <div class="panel" style="margin-bottom:0">
+      <h2><span class="dot"></span>Normativa y fuentes</h2>
+      <div class="links">
+        <a href="https://www.impo.com.uy/bases/leyes/18065-2006" target="_blank" rel="noopener"><span class="src-n">Ley</span>Ley 18.065 — regulación del trabajo doméstico</a>
+        <a href="https://www.bps.gub.uy/10275/trabajo-domestico.html" target="_blank" rel="noopener"><span class="src-n">BPS</span>Trabajo doméstico (portal general)</a>
+        <a href="https://www.bps.gub.uy/23822/aumento-salarial-de-trabajo-domestico-2026-y-nuevos-beneficios.html" target="_blank" rel="noopener"><span class="src-n">BPS</span>Aumento salarial 2026 y categorías nuevas</a>
+        <a href="https://www.bps.gub.uy/4789/remuneraciones.html" target="_blank" rel="noopener"><span class="src-n">BPS</span>Remuneraciones: antigüedad, nocturnidad, día del trabajador</a>
+        <a href="https://www.bps.gub.uy/6596/prima-por-presentismo.html" target="_blank" rel="noopener"><span class="src-n">BPS</span>Prima por presentismo</a>
+        <a href="https://www.bps.gub.uy/6575/calculo-de-aportes-de-trabajo-domestico.html" target="_blank" rel="noopener"><span class="src-n">BPS</span>Cálculo de aportes (complemento cuota mutual, IRPF)</a>
+        <a href="https://www.bps.gub.uy/6486/afiliacion-mutual-trabajadores.html" target="_blank" rel="noopener"><span class="src-n">BPS</span>Afiliación mutual (requisitos FONASA)</a>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h2><span class="dot"></span>Pasos para dar el alta</h2>
+        <ol class="check">
+          <li><div><b>Sacá tu Usuario personal BPS</b> en Abitab, Redpagos, ANDA, Correo o El Dorado, con cédula y un correo. <a href="https://www.bps.gub.uy/19580/dia-de-la-trabajadora-domestica.html" target="_blank" rel="noopener">cómo</a></div></li>
+          <li><div><b>Inscribite como empleador e inscribí al trabajador/a</b> (alta simultánea) en el servicio "Trabajo Doméstico: inscribir trabajadores y modificar datos". <a href="https://www.bps.gub.uy/10805/ingreso-de-trabajador-domestico.html" target="_blank" rel="noopener">cómo</a></div></li>
+          <li><div><b>Verificá el mínimo y la categoría vigentes</b> del laudo. <a href="https://www.bps.gub.uy/23822/aumento-salarial-de-trabajo-domestico-2026-y-nuevos-beneficios.html" target="_blank" rel="noopener">ver</a></div></li>
+          <li><div><b>Pagá la factura mensual</b> que emite BPS (ya trae los aportes calculados). Dudas: <b>0800 2001</b> opción 2.</div></li>
+        </ol>
+      </div>
+      <div class="panel" style="margin-bottom:0">
+        <h2><span class="dot"></span>Glosario</h2>
+        <dl class="gloss">
+          <dt>Nominal vs. líquido</dt><dd>Nominal es el sueldo antes de descuentos; líquido es lo que recibe en la mano.</dd>
+          <dt>Montepío (jubilación)</dt><dd>Aporte personal del 15% que cuenta para su jubilación.</dd>
+          <dt>FONASA</dt><dd>Aporte para salud (3–8% personal + 5% patronal). Da derecho a mutualista si cumple horas/ingreso.</dd>
+          <dt>FRL</dt><dd>Fondo de Reconversión Laboral (0,1%).</dd>
+          <dt>BSE</dt><dd>Seguro de accidentes de trabajo (incluido en el aporte patronal).</dd>
+          <dt>CCM</dt><dd>Complemento de cuota mutual: si el FONASA no cubre la cuota, el empleador paga la diferencia.</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Estimación orientativa con valores del laudo del Grupo 21 vigentes desde enero de 2026. No reemplaza el cálculo oficial ni asesoramiento profesional; BPS también cobra aportes sobre el aguinaldo y puede aplicar IRPF si corresponde. Para montos exactos usá el <b>Simulador de aportes</b> de BPS o llamá al <b>0800 2001</b> (opción 2).
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const nf  = new Intl.NumberFormat('es-UY', {maximumFractionDigits:0});
+  const nf1 = new Intl.NumberFormat('es-UY', {maximumFractionDigits:1});
+  const BPC = 6864;
+  const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct','Nov','Dic'];
+  let modo = 'mantener';
+
+  function num(id){ const v=parseFloat($(id).value); return isNaN(v)?0:v; }
+
+  // segmented control
+  function updateModoUI(){
+    document.querySelectorAll('#modo button').forEach(x=>x.classList.toggle('active',x.dataset.modo===modo));
+    $('repartoWrap').style.display = modo==='equilibrar' ? 'block' : 'none';
+    $('modoHint').textContent =
+      modo==='mantener' ? 'El nominal sube para que, tras los descuentos, le quede el mismo líquido. Vos absorbés los aportes.'
+      : modo==='nominal' ? 'El valor ingresado es el sueldo nominal. Se le descuenta su parte, así que cobra algo menos en la mano.'
+      : 'Repartís el peso de los aportes: deslizá para elegir cuánto compensás vos y cuánto absorbe ella.';
+  }
+  document.querySelectorAll('#modo button').forEach(b=>{
+    b.addEventListener('click',()=>{ modo=b.dataset.modo; updateModoUI(); calc(); });
+  });
+
+  // ---------- core computation ----------
+  function model(){
+    const horasSem=num('horas'), valor=num('valor'), fonasa=parseFloat($('fonasa').value)||0;
+    const antYrs=num('antiguedad'), presentismoOn=$('presentismo').checked, diaTrabOn=$('diaTrab').checked;
+    const incCargas=$('cargas').checked, incCargasInf=$('cargasInf').checked;
+    const meses=Math.max(1,Math.min(120,Math.round(num('meses')||12)));
+    const inicio=parseInt($('inicio').value,10)||1, vacMes=parseInt($('vacmes').value,10)||1;
+    const ajuste=num('ajuste');
+    const minref=num('minref')||164, nocturnidad=num('nocturnidad'), hextra=num('hextra'), hextraRec=num('hextraRec');
+    const jub=num('r_jub'), frl=num('r_frl'), pat=num('r_pat'), agui=num('r_agui'), lic=num('r_lic'), sem=num('r_sem')||4.32;
+
+    const horasMes=horasSem*sem;
+    const antPct=Math.min(antYrs,10)*0.5;
+    const personalRate=(jub+fonasa+frl)/100;
+
+    // base nominal (regular hours): interpolate between "tomar nominal" and "mantener líquido"
+    const nomTomar = horasMes*valor;
+    const denom = (1+antPct/100)*(1-personalRate);
+    const nomMant = denom>0 ? (horasMes*valor)/denom : 0;
+    let nominalBase, reparto;
+    if(modo==='mantener'){ nominalBase=nomMant; reparto=100; }
+    else if(modo==='nominal'){ nominalBase=nomTomar; reparto=0; }
+    else { reparto=Math.max(0,Math.min(100,num('reparto'))); nominalBase=nomTomar + (reparto/100)*(nomMant-nomTomar); }
+    const nomHora = horasMes>0 ? nominalBase/horasMes : 0;
+
+    const primaAnt = nominalBase*antPct/100;
+    const nocturnMon = nominalBase*nocturnidad/100;
+    const heMon = hextra*nomHora*(1+hextraRec/100);
+    const salMonthly = nominalBase + primaAnt + nocturnMon + heMon;   // salario gravado recurrente
+
+    const descuento = salMonthly*personalRate;
+    const liquido = salMonthly - descuento;
+    const patronal = salMonthly*(pat/100);
+    const forBase = salMonthly + patronal;                            // recurrente sin extras anuales
+
+    const aguiCuota = salMonthly*agui/100*6;
+    const presentCuota = presentismoOn ? 0.25*aguiCuota : 0;
+    const vacAnnual = salMonthly*lic/100*12;
+    const jornalHoras = Math.min(horasSem,8);
+    const diaTrabLump = diaTrabOn ? nomHora*jornalHoras : 0;
+
+    const annualExtras = (incCargas ? (2*aguiCuota+2*presentCuota+vacAnnual) : 0) + diaTrabLump;
+    const forMonthlyAvg = forBase + annualExtras/12;
+
+    // informal
+    const infBase = horasMes*valor;
+    const infAgui = infBase*agui/100*6;
+    const infPresent = (incCargasInf && presentismoOn) ? 0.25*infAgui : 0;
+    const infVac = infBase*lic/100*12;
+    const infAnnualExtras = incCargasInf ? (2*infAgui+2*infPresent+infVac) : 0;
+    const infMonthlyAvg = infBase + infAnnualExtras/12;
+
+    // FONASA mutualista eligibility
+    const jornadas = horasMes/8;
+    const fonasaOK = (salMonthly >= 1.25*BPC) || (jornadas >= 13);
+
+    return {horasMes,nomHora,nominalBase,primaAnt,nocturnMon,heMon,salMonthly,descuento,liquido,patronal,forBase,
+            aguiCuota,presentCuota,vacAnnual,diaTrabLump,annualExtras,forMonthlyAvg,
+            infBase,infAgui,infPresent,infVac,infAnnualExtras,infMonthlyAvg,
+            incCargas,incCargasInf,presentismoOn,diaTrabOn,meses,inicio,vacMes,ajuste,minref,
+            antPct,fonasa,jub,pat,personalRate,fonasaOK,jornadas,agui,lic,reparto};
+  }
+
+  // ---------- monthly flows with real timing + semester adjustments ----------
+  function buildFlows(base, lumps, startMonth, N, ajPct){
+    const cum=[0], marks={}; let c=0, mult=1;
+    for(let i=1;i<=N;i++){
+      const cal=((startMonth-1+(i-1))%12)+1;
+      if(i>1 && (cal===1||cal===7)) mult*=(1+ajPct/100);
+      let f=base*mult, isL=false;
+      lumps.forEach(L=>{ if(L.amt>0.01 && L.cal.indexOf(cal)>=0){ f+=L.amt*mult; isL=true; } });
+      c+=f; cum.push(c); if(isL) marks[i]=true;
+    }
+    return {cum, marks};
+  }
+
+  let lastModel=null;
+
+  function calc(){
+    const m=model(); lastModel=m;
+
+    if(modo==='equilibrar'){
+      const cashNow=m.horasMes*(num('valor')||0);
+      const diff=m.liquido-cashNow;
+      $('repartoReadout').innerHTML='Vos compensás <b>'+nf.format(m.reparto)+'%</b> del descuento · recibe <b>$'+nf.format(m.liquido)+'</b>/mes ('+(diff>=0?'+':'−')+'$'+nf.format(Math.abs(diff))+' vs. hoy).';
+    }
+
+    // cards
+    $('inf_total').textContent=nf.format(m.infMonthlyAvg);
+    $('inf_ella').textContent =nf.format(m.infMonthlyAvg);
+    $('for_total').textContent=nf.format(m.forMonthlyAvg);
+    $('for_ella').textContent =nf.format(m.liquido);
+    $('for_nom').textContent  =nf.format(m.salMonthly);
+
+    // bars
+    const cargasMonthly=m.forMonthlyAvg-m.forBase;
+    const maxV=Math.max(m.forMonthlyAvg, m.infMonthlyAvg, 1);
+    $('bar_inf').style.width=(m.infMonthlyAvg/maxV*100)+'%';
+    $('bar_liq').style.width=(m.liquido/maxV*100)+'%';
+    $('bar_desc').style.width=(m.descuento/maxV*100)+'%';
+    $('bar_pat').style.width=(m.patronal/maxV*100)+'%';
+    $('bar_car').style.width=(cargasMonthly/maxV*100)+'%';
+    $('bar_inf_v').textContent=nf.format(m.infMonthlyAvg);
+    $('bar_for_v').textContent=nf.format(m.forMonthlyAvg);
+
+    const deltaAbs=m.forMonthlyAvg-m.infMonthlyAvg;
+    $('delta_abs').textContent=nf.format(deltaAbs);
+    $('delta_pct').textContent=nf1.format(m.infMonthlyAvg>0?deltaAbs/m.infMonthlyAvg*100:0);
+
+    // breakdown
+    const rows=[];
+    rows.push(['Sueldo nominal base <span class="tline">($'+nf.format(m.nomHora)+'/h · '+nf1.format(m.horasMes)+' h/mes)</span>', m.nominalBase, '']);
+    if(m.primaAnt>0.5)  rows.push(['Prima por antigüedad <span class="tline">('+nf1.format(m.antPct)+'%)</span>', m.primaAnt, 'sub']);
+    if(m.nocturnMon>0.5) rows.push(['Compensación por nocturnidad', m.nocturnMon, 'sub']);
+    if(m.heMon>0.5)     rows.push(['Horas extra', m.heMon, 'sub']);
+    rows.push(['= Salario gravado', m.salMonthly, 'strong']);
+    rows.push(['− Descuentos de la persona <span class="tline">(jubilación + FONASA + FRL)</span>', -m.descuento, '']);
+    rows.push(['= Líquido que recibe', m.liquido, 'strong']);
+    rows.push(['+ Aportes patronales <span class="tline">(jubilación, FONASA, FRL, BSE)</span>', m.patronal, '']);
+    if(m.incCargas){
+      rows.push(['+ Aguinaldo prorrateado', 2*m.aguiCuota/12, 'sub']);
+      if(m.presentCuota>0.5) rows.push(['+ Presentismo prorrateado', 2*m.presentCuota/12, 'sub']);
+      rows.push(['+ Licencia + salario vacacional prorrateados', m.vacAnnual/12, 'sub']);
+    }
+    if(m.diaTrabLump>0.5) rows.push(['+ Día del trabajador (prorrateado)', m.diaTrabLump/12, 'sub']);
+    rows.push(['Costo total para vos (promedio)', m.forMonthlyAvg, 'total']);
+
+    $('breakdown').innerHTML = rows.map(r=>{
+      const cls = r[2]==='total'?' class="total"' : (r[2]==='sub'?' class="sub"':'');
+      const val = (r[1]<0?'−$':'$')+nf.format(Math.abs(r[1]));
+      const name = r[2]==='strong' ? '<b>'+r[0]+'</b>' : r[0];
+      return '<tr'+cls+'><td>'+name+'</td><td>'+val+'</td></tr>';
+    }).join('');
+
+    // min-wage flag
+    const flag=$('flag'), txt=$('flag_txt');
+    if(m.nomHora>=m.minref){ flag.className='flag ok'; flag.querySelector('b').textContent='✓';
+      txt.innerHTML='Nominal de <b>$'+nf.format(m.nomHora)+'/h</b>, por encima del mínimo de referencia ($'+nf.format(m.minref)+'/h).'; }
+    else { flag.className='flag bad'; flag.querySelector('b').textContent='!';
+      txt.innerHTML='Nominal de <b>$'+nf.format(m.nomHora)+'/h</b>, por debajo del mínimo ($'+nf.format(m.minref)+'/h). Pagar bajo el laudo no está permitido.'; }
+
+    // FONASA flag
+    const fF=$('flagF'), fFt=$('flagF_txt');
+    if(m.fonasaOK){ fFt.innerHTML='Con estas horas/remuneración <b>genera derecho a mutualista (FONASA)</b> por este empleo (≥1,25 BPC o ≥13 jornadas/mes).'; }
+    else { fFt.innerHTML='Con tan pocas horas <b>quizá no genere mutualista solo por este empleo</b> (se necesita ≥1,25 BPC ≈ $'+nf.format(1.25*BPC)+' o ≥13 jornadas/mes). Igual puede acumular con otros trabajos. Confirmá en BPS.'; }
+
+    // qué gana
+    $('g_jub').textContent = nf.format(m.salMonthly*(m.jub+7.5)/100*12);
+    $('g_fonasa').textContent = m.fonasaOK ? 'Sí' : 'A confirmar';
+    $('g_fonasa_s').textContent = m.fonasaOK ? 'Acceso a mutualista por este empleo.' : 'Pocas horas: puede requerir acumular servicios.';
+
+    // retro
+    const retroMeses=Math.max(0,Math.round(num('retroMeses')));
+    const retroRec=num('retroRecargo');
+    const aportesMes = m.salMonthly*(m.personalRate + m.pat/100);
+    const cargasMes = m.annualExtras/12;
+    const retroAportes = retroMeses*(aportesMes + cargasMes);
+    const retroTotal = retroAportes*(1+retroRec/100);
+    $('retro_aportes').textContent=nf.format(retroAportes);
+    $('retro_total').textContent=nf.format(retroTotal);
+
+    // flows + chart
+    const lumpsF=[];
+    if(m.incCargas){ lumpsF.push({cal:[6,12], amt:m.aguiCuota+m.presentCuota}); lumpsF.push({cal:[m.vacMes], amt:m.vacAnnual}); }
+    if(m.diaTrabLump>0.5) lumpsF.push({cal:[8], amt:m.diaTrabLump});
+    const lumpsI=[];
+    if(m.incCargasInf){ lumpsI.push({cal:[6,12], amt:m.infAgui+m.infPresent}); lumpsI.push({cal:[m.vacMes], amt:m.infVac}); }
+
+    const fFo=buildFlows(m.forBase, lumpsF, m.inicio, m.meses, m.ajuste);
+    const fIn=buildFlows(m.infBase, lumpsI, m.inicio, m.meses, m.ajuste);
+
+    $('ev_meses').textContent=m.meses;
+    $('ev_inf').textContent=nf.format(fIn.cum[m.meses]);
+    $('ev_for').textContent=nf.format(fFo.cum[m.meses]);
+    $('ev_dif').textContent=nf.format(fFo.cum[m.meses]-fIn.cum[m.meses]);
+    renderChart(fIn, fFo, m.meses, m.inicio);
+
+    // inversa
+    const budget=num('invBudget');
+    const ratio = m.forMonthlyAvg>0 ? budget/m.forMonthlyAvg : 0;
+    const valHora = valorSafe()* ratio;
+    const liqHora = ratio*m.liquido/m.horasMes;
+    const iTxt=$('inv_txt').querySelector('div');
+    if(m.horasMes>0 && m.forMonthlyAvg>0){
+      iTxt.innerHTML='Con <b>$'+nf.format(budget)+'/mes</b> y la configuración actual podés pagar hasta <b>$'+nf.format(valHora)+'/h en la mano</b> '+
+        '(líquido ≈ $'+nf.format(ratio*m.liquido)+'/mes para '+nf1.format(m.horasMes)+' h).';
+    } else { iTxt.textContent='Ingresá horas y valores válidos.'; }
+  }
+  function valorSafe(){ const v=num('valor'); return v||0; }
+
+  // ---------- chart ----------
+  const chartEl=$('chart');
+  function renderChart(fIn, fFo, meses, startMonth){
+    const cumI=fIn.cum, cumF=fFo.cum;
+    const W=760,H=380,padL=78,padR=92,padT=22,padB=42;
+    const plotW=W-padL-padR, plotH=H-padT-padB;
+    const maxY=Math.max(cumF[meses], cumI[meses], 1);
+    const x=m=> padL+(m/meses)*plotW;
+    const y=v=> padT+plotH-(v/maxY)*plotH;
+    const calOf=m=> ((startMonth-1+(m-1))%12)+1;
+    const diamond=(cx,cy,col)=>'<path d="M'+cx+' '+(cy-5)+'L'+(cx+5)+' '+cy+'L'+cx+' '+(cy+5)+'L'+(cx-5)+' '+cy+'Z" fill="'+col+'"/>';
+
+    let grid=''; const ticks=4;
+    for(let i=0;i<=ticks;i++){ const v=maxY*i/ticks, gy=y(v);
+      grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(padL+plotW)+'" y2="'+gy+'" stroke="var(--line)" stroke-width="1"/>';
+      grid+='<text x="'+(padL-10)+'" y="'+(gy+4)+'" text-anchor="end" class="ax">$'+nf.format(v)+'</text>'; }
+    let xl=''; const step=Math.max(1,Math.ceil(meses/6));
+    for(let mm=step;mm<=meses;mm+=step){ xl+='<text x="'+x(mm)+'" y="'+(padT+plotH+22)+'" text-anchor="middle" class="ax">'+MES[calOf(mm)-1]+'</text>'; }
+
+    let pf='',pi='';
+    for(let mm=0;mm<=meses;mm++){ pf+=(mm?'L':'M')+x(mm).toFixed(1)+' '+y(cumF[mm]).toFixed(1)+' '; pi+=(mm?'L':'M')+x(mm).toFixed(1)+' '+y(cumI[mm]).toFixed(1)+' '; }
+    let area='M'+x(0)+' '+y(cumF[0]).toFixed(1)+' ';
+    for(let mm=1;mm<=meses;mm++) area+='L'+x(mm).toFixed(1)+' '+y(cumF[mm]).toFixed(1)+' ';
+    for(let mm=meses;mm>=0;mm--) area+='L'+x(mm).toFixed(1)+' '+y(cumI[mm]).toFixed(1)+' ';
+    area+='Z';
+    let marks='';
+    for(let mm=1;mm<=meses;mm++){ if(fFo.marks[mm]) marks+=diamond(x(mm),y(cumF[mm]),'var(--formal-deep)'); if(fIn.marks[mm]) marks+=diamond(x(mm),y(cumI[mm]),'var(--informal)'); }
+
+    const fxE=x(meses), fyE=y(cumF[meses]), ixE=x(meses), iyE=y(cumI[meses]);
+    const iLabY=(Math.abs(fyE-iyE)<16)? fyE+16 : iyE+4;
+
+    chartEl.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" id="evsvg">'+
+      '<style>.ax{font-family:ui-monospace,monospace;font-size:11px;fill:var(--ink-soft)}.endlab{font-family:system-ui,sans-serif;font-weight:700;font-size:13px}</style>'+
+      grid+xl+
+      '<path d="'+area+'" fill="var(--formal)" opacity="0.10"/>'+
+      '<path d="'+pi+'" fill="none" stroke="var(--informal)" stroke-width="2.5" stroke-linejoin="round"/>'+
+      '<path d="'+pf+'" fill="none" stroke="var(--formal)" stroke-width="2.5" stroke-linejoin="round"/>'+
+      marks+
+      '<circle cx="'+ixE+'" cy="'+iyE+'" r="4" fill="var(--informal)"/>'+
+      '<circle cx="'+fxE+'" cy="'+fyE+'" r="4" fill="var(--formal)"/>'+
+      '<text x="'+(fxE+10)+'" y="'+(fyE+4)+'" class="endlab" fill="var(--formal-deep)">$'+nf.format(cumF[meses])+'</text>'+
+      '<text x="'+(ixE+10)+'" y="'+iLabY+'" class="endlab" fill="var(--informal)">$'+nf.format(cumI[meses])+'</text>'+
+      '<line id="ev_guide" y1="'+padT+'" y2="'+(padT+plotH)+'" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>'+
+      '<circle id="ev_di" r="4" fill="#fff" stroke="var(--informal)" stroke-width="2" opacity="0"/>'+
+      '<circle id="ev_df" r="4" fill="#fff" stroke="var(--formal)" stroke-width="2" opacity="0"/>'+
+      '<g id="ev_tip" opacity="0"><rect id="ev_tipbg" rx="8" width="172" height="80" fill="var(--ink)"/>'+
+        '<text id="ev_t0" fill="#fff" font-family="system-ui,sans-serif" font-weight="700" font-size="12"></text>'+
+        '<text id="ev_t1" fill="#f2d9c4" font-family="ui-monospace,monospace" font-size="11"></text>'+
+        '<text id="ev_t2" fill="#bfe0d3" font-family="ui-monospace,monospace" font-size="11"></text>'+
+        '<text id="ev_t3" fill="#fff" font-family="ui-monospace,monospace" font-size="11"></text></g>'+
+      '<rect id="ev_hit" x="'+padL+'" y="'+padT+'" width="'+plotW+'" height="'+plotH+'" fill="transparent" style="cursor:crosshair"/></svg>';
+
+    const svgEl=$('evsvg'), hit=$('ev_hit'), guide=$('ev_guide'), di=$('ev_di'), df=$('ev_df'), tip=$('ev_tip'), tbg=$('ev_tipbg');
+    const t0=$('ev_t0'),t1=$('ev_t1'),t2=$('ev_t2'),t3=$('ev_t3'); const tw=172, th=80;
+    function move(e){
+      const r=svgEl.getBoundingClientRect();
+      const clientX=(e.touches&&e.touches[0])?e.touches[0].clientX:e.clientX;
+      const cx=(clientX-r.left)/r.width*W;
+      let mm=Math.round((cx-padL)/plotW*meses); mm=Math.max(1,Math.min(meses,mm));
+      const gx=x(mm), iy=y(cumI[mm]), fy=y(cumF[mm]);
+      guide.setAttribute('x1',gx);guide.setAttribute('x2',gx);guide.setAttribute('opacity','0.4');
+      di.setAttribute('cx',gx);di.setAttribute('cy',iy);di.setAttribute('opacity','1');
+      df.setAttribute('cx',gx);df.setAttribute('cy',fy);df.setAttribute('opacity','1');
+      const tag=(fFo.marks[mm]||fIn.marks[mm])?' ◆':'';
+      t0.textContent='Mes '+mm+' · '+MES[calOf(mm)-1]+tag;
+      t1.textContent='Informal  $'+nf.format(cumI[mm]);
+      t2.textContent='Formal    $'+nf.format(cumF[mm]);
+      t3.textContent='Dif.      $'+nf.format(cumF[mm]-cumI[mm]);
+      let tx=gx+14; if(tx+tw>W-2) tx=gx-tw-14; if(tx<2)tx=2;
+      let ty=Math.min(fy,iy)-th-10; if(ty<padT) ty=padT+4;
+      tbg.setAttribute('x',tx);tbg.setAttribute('y',ty);
+      t0.setAttribute('x',tx+12);t0.setAttribute('y',ty+20);
+      t1.setAttribute('x',tx+12);t1.setAttribute('y',ty+39);
+      t2.setAttribute('x',tx+12);t2.setAttribute('y',ty+55);
+      t3.setAttribute('x',tx+12);t3.setAttribute('y',ty+71);
+      tip.setAttribute('opacity','1');
+    }
+    function leave(){[guide,di,df,tip].forEach(el=>el.setAttribute('opacity','0'));}
+    hit.addEventListener('mousemove',move); hit.addEventListener('mouseleave',leave);
+    hit.addEventListener('touchstart',move,{passive:true}); hit.addEventListener('touchmove',move,{passive:true});
+  }
+
+  // ---------- URL share ----------
+  const FIELDS=['horas','valor','reparto','fonasa','antiguedad','meses','inicio','vacmes','ajuste','minref','nocturnidad','hextra','hextraRec','r_jub','r_frl','r_pat','r_agui','r_lic','r_sem','retroMeses','retroRecargo','invBudget'];
+  const CHECKS=['presentismo','diaTrab','cargas','cargasInf'];
+  function buildQuery(){
+    const p=new URLSearchParams();
+    FIELDS.forEach(f=>p.set(f,$(f).value));
+    CHECKS.forEach(c=>p.set(c,$(c).checked?'1':'0'));
+    p.set('modo',modo);
+    return p.toString();
+  }
+  function loadURL(){
+    const p=new URLSearchParams(location.search); if(![...p.keys()].length) return;
+    FIELDS.forEach(f=>{ if(p.has(f)) $(f).value=p.get(f); });
+    CHECKS.forEach(c=>{ if(p.has(c)) $(c).checked=p.get(c)==='1'; });
+    if(p.has('modo')){ modo=p.get('modo');
+      document.querySelectorAll('#modo button').forEach(b=>b.classList.toggle('active',b.dataset.modo===modo)); }
+  }
+  $('btnShare').addEventListener('click',()=>{
+    const q=buildQuery();
+    let base='';
+    try{
+      const href=location.href.split('?')[0];
+      if(!/^about:|^blob:/.test(href)) base=href;
+    }catch(e){}
+    try{ if(base) history.replaceState(null,'','?'+q); }catch(e){}
+    const url = base ? base+'?'+q : '?'+q;
+    const ok = base ? '¡Enlace copiado!' : '¡Parámetros copiados!';
+    function done(){ $('btnShare').textContent=ok; setTimeout(()=>$('btnShare').textContent='Copiar enlace del escenario',1800); }
+    function fallback(){ const i=document.createElement('input'); i.value=url; document.body.appendChild(i); i.select(); try{document.execCommand('copy');}catch(e){} i.remove(); done(); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done).catch(fallback); }
+    else fallback();
+  });
+  $('btnPrint').addEventListener('click',()=>window.print());
+
+  // ---------- bind ----------
+  FIELDS.concat(['presentismo','diaTrab','cargas','cargasInf','fonasa','inicio','vacmes'])
+    .forEach(id=>{ const el=$(id); el.addEventListener('input',calc); el.addEventListener('change',calc); });
+
+  loadURL();
+  updateModoUI();
+  calc();
+})();
+</script>
+</body>
+</html>
