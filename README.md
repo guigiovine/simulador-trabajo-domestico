@@ -1,11 +1,14 @@
-# Simulador de trabajo doméstico — Informal vs. Formal (Uruguay)
+# En Regla — Costo de formalizar trabajo doméstico (Uruguay)
+
+> Calculá el costo real de formalizar trabajo doméstico en Uruguay (BPS, Grupo 21).
 
 Herramienta web de un solo archivo para comparar lo que cuesta pagar a una persona
 de trabajo doméstico **en la mano** (informal) frente al costo real de **formalizarla**
 con todos los aportes ante BPS (Grupo 21).
 
 Es completamente **autocontenida**: un único `index.html`
-sin dependencias externas (ni librerías, ni fuentes remotas).
+sin dependencias externas (ni librerías, ni fuentes remotas). Se abre en cualquier
+navegador, también sin internet.
 
 ## Qué calcula
 
@@ -16,10 +19,6 @@ sin dependencias externas (ni librerías, ni fuentes remotas).
 - Gráfico de evolución del gasto acumulado en el tiempo, con ajustes salariales semestrales.
 - Costo de regularizar atrasos (retroactivo), "qué gana la persona" y calculadora inversa.
 - Paneles de normativa con enlaces oficiales, glosario y checklist del trámite.
-
-## Cómo usarla
-
-Abrí https://guigiovine.github.io/simulador-trabajo-domestico/
 
 ## Aviso
 
