@@ -7,8 +7,7 @@ de trabajo doméstico **en la mano** (informal) frente al costo real de **formal
 con todos los aportes ante BPS (Grupo 21).
 
 Es completamente **autocontenida**: un único `index.html`
-sin dependencias externas (ni librerías, ni fuentes remotas). Se abre en cualquier
-navegador, también sin internet.
+sin dependencias externas (ni librerías, ni fuentes remotas).
 
 ## Qué calcula
 
