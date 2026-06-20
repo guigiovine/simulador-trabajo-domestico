@@ -320,8 +320,19 @@
       </div>
       <div class="field">
         <label for="valor">Valor hora "en la mano" (líquido actual)</label>
-        <div class="input-money"><input type="number" id="valor" value="294" min="0" step="1"></div>
+        <div class="input-money"><input type="number" id="valor" value="200" min="0" step="1"></div>
         <div class="hint">El cálculo es el mismo para cualquier trabajador/a.</div>
+      </div>
+      <div class="field">
+        <label>Presets de valor hora</label>
+        <div class="chips" id="presetsV">
+          <button type="button" data-v="180">$180</button>
+          <button type="button" data-v="200">$200</button>
+          <button type="button" data-v="250">$250</button>
+          <button type="button" data-v="300">$300</button>
+          <button type="button" data-v="350">$350</button>
+          <button type="button" data-v="400">$400</button>
+        </div>
       </div>
       <div class="field">
         <label for="categoria">Categoría (laudo)</label>
@@ -742,6 +753,7 @@
 
   /* ---------- presets ---------- */
   document.querySelectorAll('#presets button').forEach(b=>b.addEventListener('click',()=>{ $('horas').value=b.dataset.h; calc(); }));
+  document.querySelectorAll('#presetsV button').forEach(b=>b.addEventListener('click',()=>{ $('valor').value=b.dataset.v; calc(); }));
 
   /* ---------- unit toggle ---------- */
   document.querySelectorAll('#unit button').forEach(b=>b.addEventListener('click',()=>{
@@ -843,6 +855,7 @@
     // preset activo
     const hv=inp.horasSem;
     document.querySelectorAll('#presets button').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.h)===hv));
+    document.querySelectorAll('#presetsV button').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.v)===inp.valor));
 
     // chart
     const fFo=flowsFor(m), fIn=flowsInf(m);

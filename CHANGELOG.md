@@ -3,6 +3,12 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/).
 Versionado siguiendo [SemVer](https://semver.org/lang/es/).
 
+## [1.3.3] — 2026-06-20
+### Agregado
+- Presets de valor hora ($180 a $400) con un clic.
+### Cambiado
+- Valor hora por defecto al cargar la página: $200.
+
 ## [1.3.2] — 2026-06-20
 ### Cambiado
 - Nombre del sitio: "En Regla", con bajada "Calculá el costo real de formalizar trabajo doméstico en Uruguay" (encabezado, título de pestaña, OpenGraph, impresión y resumen).
