@@ -3,6 +3,49 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/).
 Versionado siguiendo [SemVer](https://semver.org/lang/es/).
 
+## [1.3.2] — 2026-06-20
+### Cambiado
+- Nombre del sitio: "En Regla", con bajada "Calculá el costo real de formalizar trabajo doméstico en Uruguay" (encabezado, título de pestaña, OpenGraph, impresión y resumen).
+
+## [1.3.1] — 2026-06-20
+### Quitado
+- Paneles "Hogar: varias personas", "Costo de regularizar atrasos (retroactivo)" y "Calculadora inversa".
+
+## [1.3.0] — 2026-06-20
+### Agregado
+- Presets de frecuencia (1 a 4 días/semana, medio horario, jornada, máximo) que fijan las horas con un clic.
+- Panel "Beneficios de formalizar" reforzado, en dos columnas (trabajador/a y empleador/a), con montos dinámicos de aportes jubilatorios, aguinaldo y licencia.
+### Cambiado
+- El panel "Lo que dejás de arriesgar" se integra al nuevo panel de beneficios.
+
+## [1.2.1] — 2026-06-20
+### Cambiado
+- Scroll simplificado: un único scroll de página (se quitaron las dos columnas con scroll propio); el resumen sigue fijo arriba.
+- Encabezado más compacto (título, marca y márgenes reducidos).
+- "Normativa y fuentes", "Pasos para dar el alta" y "Glosario" se reorganizan en un pie de página único junto con la nota legal.
+
+## [1.2.0] — 2026-06-20
+### Agregado
+- **Modo oscuro** con toggle (recuerda la preferencia).
+- **Resumen fijo (sticky)** con informal/formal/diferencia y selector **mensual/anual**.
+- **Animación de cifras** (count-up) en los números principales, respetando `prefers-reduced-motion`.
+- **Tooltips con fuente** en términos técnicos (FONASA, antigüedad, presentismo, día del trabajador) enlazando a la norma.
+- **Favicon** propio, **OpenGraph** para previsualización al compartir, y mejoras de **accesibilidad** (foco visible, aria-labels).
+- **Aportes sobre el aguinaldo** (y demás cargas) para un costo formal más exacto.
+- **IRPF estimado** por franjas en BPC (se descuenta del líquido si aplica).
+- **Selector de categoría** I/II/III.
+- **Hogar: varias personas**, con totales del hogar.
+- **Indicadores**: tasa efectiva de aportes y costo efectivo por hora.
+- **Validaciones** (horas > 44, valores inválidos, nominal bajo el mínimo).
+- **Sello de vigencia** y BPC editable en un solo lugar.
+- **Copiar resumen en texto** y **exportar CSV** (desglose + proyección).
+### Mejorado
+- Impresión/PDF con encabezado y fecha; se ocultan controles e interactivos.
+
+## [1.1.1] — 2026-06-19
+### Corregido
+- Scroll independiente para cada columna en escritorio: la columna de ajustes y la de resultados ahora se desplazan por separado dentro de la altura de la ventana, en lugar de compartir el scroll de la página.
+
 ## [1.1.0] — 2026-06-19
 ### Cambiado
 - Rediseño visual completo: estética **minimalista monocromática** con paleta basada en el azul institucional de BPS.
